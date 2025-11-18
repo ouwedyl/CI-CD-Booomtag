@@ -1,0 +1,30 @@
+flowchart LR
+  %% Externe entiteit
+  U["Booomtag medewerker / Dashboard (verzamelt en bekijkt data)"]
+
+  %% Subgraph: AWS VPC
+  subgraph VPC["AWS VPC (trust boundary)"]
+    %% Load Balancer
+    ALB["Application Load Balancer (verdeelt verkeer over Fargate-tasks via target groups)"]
+
+    %% Frontend node
+    F["Frontend (HTML/JS dashboard) - Render dashboard UI / Stuurt gebruikersinput door naar Backend API"]
+
+    %% Backend node
+    B["Backend API (PHP backend) - Verwerkt requests van Frontend / Haalt data uit RDS via credentials / Logt events naar CloudWatch / Bootstrap: download app code van S3 bij start"]
+
+    %% Data stores
+    S3["S3 Bucket (app zip) - Bevat Booomtag applicatiecode"]
+    RDS["RDS MySQL (private subnet) - Bevat alle bedrijfsdata / Alleen bereikbaar vanaf ECS via Security Group"]
+    SM["Secrets Manager / Parameter Store - Bevat DB credentials, API keys / Backend API haalt secrets op via IAM rol"]
+    CW["CloudWatch Logs - Ontvangt logs van Backend API voor auditing / monitoring"]
+  end
+
+  %% Data flows
+  U -->|"HTTPS request + JWT"| ALB
+  ALB --> F
+  F -->|"API call (JSON request/response)"| B
+  B -->|"Get Secret Value (DB credentials via IAM)"| SM
+  B -->|"SQL query over TLS (3306)"| RDS
+  B -->|"Log events"| CW
+  B -->|"Startup: GET app zip object"| S3
