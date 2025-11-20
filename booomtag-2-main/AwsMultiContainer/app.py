@@ -9,8 +9,7 @@ def index():
     connection = mysql.connector.connect(
         host="mysql",  # Use the Docker service name for MySQL
         user="test",\
-        password="123games"
-        #password = environ.get('OAUTH_SECRET') # Replace with your MySQL password
+        password = environ.get('OAUTH_SECRET') # Replace with your MySQL password
         database="YOUR_MYSQL_DATABASE"
     )
     cursor = connection.cursor()
