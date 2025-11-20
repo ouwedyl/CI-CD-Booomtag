@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "http-3-248-191-80-9000-",
+        "projectKey": "sonar-booomtag-test"
+    }
+}
