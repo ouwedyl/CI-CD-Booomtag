@@ -11,13 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Haal de code op
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Voer de SonarQube analyse uit
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2
         with:
           projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "http://3.248.191.80:9000"
+
+      # 3. (Optioneel) Quality Gate check
+      #    Hiermee faalt de pipeline als de codekwaliteit onvoldoende is.
+      - name: SonarQube Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "http://3.248.191.80:9000"
