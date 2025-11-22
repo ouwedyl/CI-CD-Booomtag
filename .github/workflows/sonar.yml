@@ -20,11 +20,15 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v2
         with:
           projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=sonar-booomtag-test
+            -Dsonar.projectName="CI-CD-Booomtag"
+            -Dsonar.sources=.
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "http://3.248.191.80:9000"
 
-      # 3. (Optioneel) Quality Gate check
+      # 3. Quality Gate check
       #    Hiermee faalt de pipeline als de codekwaliteit onvoldoende is.
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1
