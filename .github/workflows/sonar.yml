@@ -35,3 +35,5 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "http://3.248.191.80:9000"
+
+          #thanks
